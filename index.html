@@ -501,18 +501,15 @@ footer{
 <script>
 
 (function(){
-    var dieIds = ['die1','die2','die3','die4'];
-    var dice = dieIds.map(function(id){ return document.getElementById(id); });
-    var rollBtn = document.getElementById('rollBtn');
-    var luckyBanner = document.getElementById('luckyBanner');
-    var luckyBannerTop = document.getElementById('luckyBannerTop');
-    var infoSection = document.getElementById('infoSection');
-    var rollSound = new Audio('/audio/roll.ogg');
-    var successSound = new Audio('/audio/success.ogg');
-    var luckyRollSound = new Audio('/audio/luckyroll.mp3');
-    rollSound.volume = 0.45;
-    successSound.volume = 0.8;
-    luckyRollSound.volume = 0.8;
+   var rollBtn = document.getElementById('rollBtn');
+
+var rollSound = new Audio('audio/luckyroll.mp3');
+rollSound.volume = 0.8;
+
+rollBtn.addEventListener('click', function(){
+    rollSound.currentTime = 0;
+    rollSound.play();
+});
 
  
 

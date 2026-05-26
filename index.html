@@ -13,7 +13,7 @@
 
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 <audio id="rollSound" src="sound/luckroll.mp3" volume="1.0"></audio>
 
@@ -21,9 +21,6 @@
 
 
 <style>
-
-
-    
 
 
 body{
@@ -58,7 +55,7 @@ body{
 }
 
 .logo {
-    width: 50px;
+    width: 20px;
     position: absolute;
     top: -50px;
     left: 50%;
@@ -85,7 +82,7 @@ body{
 }
 
 .section-title{
-    font-weight:bold;
+    font-family:'Luckiest Guy',cursive;
     margin-bottom:12px;
 }
 
@@ -148,7 +145,6 @@ body{
 /* ================= COLOR PANEL (SLIDE) ================= */
 
 .color-panel{
-
     position:fixed;
     right:-220px; /* مخفية */
 
@@ -209,12 +205,8 @@ body{
 }
 
 .section-title {
-    text-align: center;
-    font-size: 28px;
-    font-weight: 900;
-    color: white;
-    margin-bottom: 15px;
-    letter-spacing: 1px;
+  font-weight:bold;
+    margin-bottom:12px;
 }
 
 .colors {
@@ -226,13 +218,18 @@ body{
 }
 
 .colors span {
-    background: white;
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 800;
-    text-transform: uppercase;
-    box-shadow: 0 0 10px #0005;
+ padding:8px 14px;
+
+    border-radius:999px;
+
+    background:white;
+
+    font-weight:bold;
+
+    -webkit-text-stroke:0;
+
+    box-shadow:
+        0 4px 10px rgba(0,0,0,0.08)
 }
 .red { color: #ff3b3b; }
 .orange { color: #ff8c00; }

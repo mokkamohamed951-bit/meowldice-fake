@@ -13,23 +13,20 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="" crossorigin>
 
-<audio id="rollSound" src="sound/luckky.mp3"></audio>
-
-
-
-
-
+<audio id="rollSound" src="sound/luckroll.mp3" volume="1.0"></audio>
 
 <img class="logo" src="images/Meowl-Dice-Logo.png" alt="Logo">
 
 
 <style>
 
+
     
 
 
 body{
-    margin:0;
+    
+   margin:0;
     padding:20px;
 
     font-family:'Luckiest Guy',cursive;
@@ -209,6 +206,40 @@ body{
     align-items:center;
 }
 
+.section-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 900;
+    color: white;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+.colors {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}
+
+.colors span {
+    background: white;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    box-shadow: 0 0 10px #0005;
+}
+.red { color: #ff3b3b; }
+.orange { color: #ff8c00; }
+.yellow { color: #ffcc00; }
+.green { color: #00c851; }
+.blue { color: #1e90ff; }
+.purple { color: #9b59b6; }
+
+
 .dot{
     width:18px;
     height:18px;
@@ -352,11 +383,14 @@ footer{
 
 <body>
 
+    
+
 <div class="container">
 
     <img src="/images/Meowl-Dice-Logo.png" class="logo">
 
     <div class="theme-switcher">
+        <div class="section-title">Background Theme</div>
         <select id="themeSelect">
             <option value="black">Black</option>
             <option value="blue">Blue</option>
@@ -367,10 +401,36 @@ footer{
             <option value="gold">Gold</option>
         </select>
     </div>
+      <div class="subtext">4 Color Dice • Secure Random Rolls</div>
 
-    <div class="subtext">4 Color Dice • Secure Random Rolls</div>
+    
 
-    <div class="section-title">PICK COLORS</div>
+    
+    <div class="section-title">
+        Possible Colors
+    </div>
+
+    <div class="colors">
+
+        <span class="red">Red</span>
+
+        <span class="orange">Orange</span>
+
+        <span class="yellow">Yellow</span>
+
+        <span class="green">Green</span>
+
+        <span class="blue">Blue</span>
+
+        <span class="purple">Purple</span>
+
+    </div>
+ 
+
+
+    
+
+   
 
     <button id="toggleColorsBtn">Colors</button>
 
@@ -417,10 +477,23 @@ footer{
         <div class="die" id="die4"><div class="center-dot"></div></div>
     </div>
 
-    <button id="rollBtn">ROLL 🎲</button>
 
 
 
+    <button id="rollBtn">
+        ROLL 🎲
+    </button>
+
+    <div id="luckyBanner" style="
+        display:none;
+        margin-top:18px;
+        font-size:2rem;
+        color:#ffd700;
+        -webkit-text-stroke:1.5px #b8860b;
+        paint-order:stroke fill;
+        text-shadow:0 0 12px rgba(255,215,0,0.7),0 0 24px rgba(255,215,0,0.4);
+        animation:luckyPulse 0.6s ease-in-out 3;
+    ">🍀 Lucky Roll! 🍀</div>
 
     <footer>© 2026 MEOWL-DICE.COM</footer>
 
@@ -429,6 +502,20 @@ footer{
 <script>
 
 (function(){
+    var dieIds = ['die1','die2','die3','die4'];
+    var dice = dieIds.map(function(id){ return document.getElementById(id); });
+    var rollBtn = document.getElementById('rollBtn');
+    var luckyBanner = document.getElementById('luckyBanner');
+    var luckyBannerTop = document.getElementById('luckyBannerTop');
+    var infoSection = document.getElementById('infoSection');
+    var rollSound = new Audio('/audio/roll.ogg');
+    var successSound = new Audio('/audio/success.ogg');
+    var luckyRollSound = new Audio('/audio/luckyroll.mp3');
+    rollSound.volume = 0.45;
+    successSound.volume = 0.8;
+    luckyRollSound.volume = 0.8;
+
+ 
 
 var dice = [
     document.getElementById('die1'),
@@ -518,6 +605,97 @@ themeSelect.onchange=function(){
 
 })();
 
+  function applyTheme(name){
+        document.body.style.setProperty('--theme-bg', themeColors[name] || themeColors.black);
+        themeSelect.value = name;
+        localStorage.setItem('meowl-theme', name);
+    }
+
+    async function roll(){
+        luckyBanner.style.display = 'none';
+
+        if(luckyPending){
+            luckyPending = false;
+
+            rollSound.pause();
+            rollSound.currentTime = 0;
+            rollSound.play();
+
+            for(var i = 0; i < 12; i++){
+                shake();
+                await new Promise(function(r){ setTimeout(r, 60); });
+            }
+
+            var chosen = pickColors(true);
+            setFinalColors(chosen);
+
+            successSound.currentTime = 0;
+            successSound.play();
+            fadeOutRollSound();
+
+            hideLuckyBanner();
+
+            rollCount = 0;
+            nextLuckyRoll = 6 + randInt(19);
+            return;
+        }
+
+        rollCount++;
+        var isLucky = (rollCount >= nextLuckyRoll);
+
+        rollSound.pause();
+        rollSound.currentTime = 0;
+        rollSound.play();
+
+        for(var i = 0; i < 12; i++){
+            shake();
+            await new Promise(function(r){ setTimeout(r, 60); });
+        }
+
+        if(isLucky){
+            setDiceBlack();
+            await fadeOutRollSound();
+            showLuckyBanner();
+            luckyPending = true;
+            luckyRollSound.currentTime = 0;
+            luckyRollSound.play();
+            return;
+        }
+
+        var chosen = pickColors(false);
+        setFinalColors(chosen);
+
+        successSound.currentTime = 0;
+        successSound.play();
+        fadeOutRollSound();
+    }
+
+    rollBtn.addEventListener('click', roll);
+    roll();
+
+    var themeColors = {
+        blue: '#0a3d91',
+        green: '#0d5c2e',
+        red: '#8b1a1a',
+        black: '#0b0b0b',
+        bronze: '#6b3a2a',
+        silver: '#71797E',
+        gold: '#8B7500'
+    };
+
+    var themeSelect = document.getElementById('themeSelect');
+    var savedTheme = localStorage.getItem('meowl-theme') || 'black';
+    applyTheme(savedTheme);
+
+    themeSelect.addEventListener('change', function(){
+        applyTheme(themeSelect.value);
+    });
+
+    function applyTheme(name){
+        document.body.style.setProperty('--theme-bg', themeColors[name] || themeColors.black);
+        themeSelect.value = name;
+        localStorage.setItem('meowl-theme', name);
+    }
 
 </script>
 

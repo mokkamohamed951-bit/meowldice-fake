@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Meowl Dice 🎲</title>
+
+<link rel="icon" type="images/Meowl-Dice-Logo.png" href="/images/Meowl-Dice-Logo.png">
+<link rel="icon" type="images/Meowl-Dice-Logo.png" sizes="256x256" href="/images/Meowl-Dice-Logo.png">
+<link rel="apple-touch-icon" href="/images/Meowl-Dice-Logo.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="" crossorigin>
+
+<audio id="rollSound" src="sound/luckky.mp3"></audio>
+
+
+
+
+
+
+<img class="logo" src="images/Meowl-Dice-Logo.png" alt="Logo">
+
+
+<style>
+
+    
+
+
+body{
+    margin:0;
+    padding:20px;
+
+    font-family:'Luckiest Guy',cursive;
+
+    background-color:var(--theme-bg, #0b0b0b);
+    background-image: url('images/meowl-transparent-backround.png');
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+
+    transition:background-color 0.4s ease;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    min-height:100vh;
+
+    color:#fff;
+
+    -webkit-text-stroke:1px #000;
+    paint-order:stroke fill;
+
+    
+
+}
+
+.logo {
+    width: 50px;
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translatex(-50%);
+}
+
+
+.container{
+    width:100%;
+    max-width:950px;
+    text-align:center;
+}
+
+.logo{
+    max-width:400px;
+    width:100%;
+    height:auto;
+    margin-bottom:10px;
+}
+
+.subtext{
+    font-size:1.35rem;
+    margin-bottom:20px;
+}
+
+.section-title{
+    font-weight:bold;
+    margin-bottom:12px;
+}
+
+/* ================= THEME ================= */
+
+.theme-switcher{
+    margin-bottom:25px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:12px;
+}
+
+#themeSelect{
+    font-family:'Luckiest Guy',cursive;
+
+    font-size:1rem;
+
+    padding:8px 14px;
+
+    border-radius:10px;
+
+    border:2px solid rgba(255,255,255,0.5);
+
+    background:#222;
+    color:#fff;
+
+    cursor:pointer;
+}
+
+/* ================= TOGGLE BUTTON ================= */
+
+#toggleColorsBtn{
+
+    position:fixed;
+    right:12px;
+    top:120px;
+
+    padding:6px 10px;
+    font-size:0.75rem;
+
+    border:none;
+    border-radius:10px;
+
+    background:#1f7cff;
+    color:white;
+
+    cursor:pointer;
+
+    z-index:999;
+
+    transition:0.2s;
+}
+
+#toggleColorsBtn:hover{
+    transform:scale(1.05);
+}
+
+/* ================= COLOR PANEL (SLIDE) ================= */
+
+.color-panel{
+
+    position:fixed;
+    right:-220px; /* مخفية */
+
+    top:165px;
+
+    width:180px;
+
+    display:flex;
+    flex-direction:column;
+
+    gap:8px;
+
+    background:rgba(255,255,255,0.95);
+
+    padding:10px;
+    border-radius:12px;
+
+    box-shadow:0 10px 20px rgba(0,0,0,0.25);
+
+    z-index:999;
+
+    transition:0.3s ease;
+}
+
+/* OPEN STATE */
+.color-panel.open{
+    right:12px;
+}
+
+/* ================= COLOR OPTION ================= */
+
+.color-option{
+
+    width:100%;
+
+    background:white;
+
+    border-radius:10px;
+
+    padding:8px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    font-size:0.75rem;
+
+    cursor:pointer;
+
+    -webkit-text-stroke:0;
+
+    color:#000;
+}
+
+.left-side{
+    display:flex;
+    align-items:center;
+}
+
+.dot{
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    margin-right:8px;
+}
+
+.color-option input{
+    width:14px;
+    height:14px;
+}
+
+/* colors */
+.red{background:red;}
+.orange{background:orange;}
+.yellow{background:#ffd400;}
+.green{background:green;}
+.blue{background:#0077ff;}
+.purple{background:purple;}
+
+/* ================= DICE ================= */
+
+.dice-grid{
+    display:flex;
+    justify-content:center;
+    gap:18px;
+
+    margin-bottom:35px;
+
+    flex-wrap:nowrap;
+}
+
+.die{
+    width:120px;
+    height:120px;
+
+    border-radius:22px;
+
+    border:10px solid white;
+
+    background:white;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    box-shadow:
+        0 0 20px rgba(255,255,255,0.35),
+        0 10px 20px rgba(0,0,0,0.15);
+
+    transition:
+        background 0.15s ease,
+        transform 0.15s ease;
+}
+
+.center-dot{
+    width:32px;
+    height:32px;
+
+    border-radius:50%;
+
+    background:white;
+
+    box-shadow:
+        0 0 10px rgba(255,255,255,0.95);
+}
+
+/* ================= BUTTON ================= */
+
+#rollBtn{
+    padding:14px 34px;
+
+    font-family:'Luckiest Guy',cursive;
+
+    font-size:1.1rem;
+
+    border:none;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    background:#1f7cff;
+    color:white;
+
+    transition:0.2s;
+}
+
+#rollBtn:hover{
+    transform:scale(1.05);
+}
+
+footer{
+    margin-top:40px;
+    font-size:0.9rem;
+}
+
+/* ================= LUCKY ================= */
+
+@keyframes luckyPulse{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.15);}
+}
+
+#luckyBannerTop{
+    display:none;
+
+    font-size:3.5rem;
+
+    color:#ffd700;
+
+    text-shadow:
+        0 0 16px rgba(255,215,0,0.8),
+        0 0 32px rgba(255,215,0,0.5);
+
+    animation:luckyPulse 0.8s infinite;
+
+    margin-bottom:20px;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:700px){
+
+    .dice-grid{
+        flex-wrap:wrap;
+    }
+
+    .die{
+        width:100px;
+        height:100px;
+    }
+
+    .color-panel{
+        width:160px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <img src="/images/Meowl-Dice-Logo.png" class="logo">
+
+    <div class="theme-switcher">
+        <select id="themeSelect">
+            <option value="black">Black</option>
+            <option value="blue">Blue</option>
+            <option value="green">Green</option>
+            <option value="red">Red</option>
+            <option value="bronze">Bronze</option>
+            <option value="silver">Silver</option>
+            <option value="gold">Gold</option>
+        </select>
+    </div>
+
+    <div class="subtext">4 Color Dice • Secure Random Rolls</div>
+
+    <div class="section-title">PICK COLORS</div>
+
+    <button id="toggleColorsBtn">Colors</button>
+
+    <div class="color-panel" id="colorPanel">
+
+        <label class="color-option">
+            <div class="left-side"><div class="dot red"></div>Red</div>
+            <input type="checkbox" value="#ff0000" checked>
+        </label>
+
+        <label class="color-option">
+            <div class="left-side"><div class="dot orange"></div>Orange</div>
+            <input type="checkbox" value="#ffa500" checked>
+        </label>
+
+        <label class="color-option">
+            <div class="left-side"><div class="dot yellow"></div>Yellow</div>
+            <input type="checkbox" value="#ffff00" checked>
+        </label>
+
+        <label class="color-option">
+            <div class="left-side"><div class="dot green"></div>Green</div>
+            <input type="checkbox" value="#008000" checked>
+        </label>
+
+        <label class="color-option">
+            <div class="left-side"><div class="dot blue"></div>Blue</div>
+            <input type="checkbox" value="#0077ff" checked>
+        </label>
+
+        <label class="color-option">
+            <div class="left-side"><div class="dot purple"></div>Purple</div>
+            <input type="checkbox" value="#800080" checked>
+        </label>
+
+    </div>
+
+    <div id="luckyBannerTop">🍀 Lucky Roll! 🍀</div>
+
+    <div class="dice-grid">
+        <div class="die" id="die1"><div class="center-dot"></div></div>
+        <div class="die" id="die2"><div class="center-dot"></div></div>
+        <div class="die" id="die3"><div class="center-dot"></div></div>
+        <div class="die" id="die4"><div class="center-dot"></div></div>
+    </div>
+
+    <button id="rollBtn">ROLL 🎲</button>
+
+
+
+
+    <footer>© 2026 MEOWL-DICE.COM</footer>
+
+</div>
+
+<script>
+
+(function(){
+
+var dice = [
+    document.getElementById('die1'),
+    document.getElementById('die2'),
+    document.getElementById('die3'),
+    document.getElementById('die4')
+];
+
+function rand(max){
+    return Math.floor(Math.random()*max);
+}
+
+function getColors(){
+    var arr=[];
+    document.querySelectorAll('.color-option input:checked')
+    .forEach(i=>arr.push(i.value));
+    return arr;
+}
+
+function pick(){
+    var c=getColors();
+    var r=[];
+    for(let i=0;i<4;i++){
+        r.push(c[rand(c.length)]);
+    }
+    return r;
+}
+
+function shake(){
+    dice.forEach(d=>{
+        d.style.transform='rotate('+rand(360)+'deg)';
+        d.style.background='#ddd';
+    });
+}
+
+function set(c){
+    dice.forEach((d,i)=>{
+        d.style.background=c[i];
+        d.style.transform='rotate(0deg)';
+    });
+}
+
+async function roll(){
+    for(let i=0;i<10;i++){
+        shake();
+        await new Promise(r=>setTimeout(r,60));
+    }
+    set(pick());
+}
+
+document.getElementById('rollBtn').onclick=roll;
+
+roll();
+
+/* TOGGLE PANEL SLIDE */
+
+var btn=document.getElementById('toggleColorsBtn');
+var panel=document.getElementById('colorPanel');
+
+btn.onclick=function(){
+    panel.classList.toggle('open');
+
+    if(panel.classList.contains('open')){
+        btn.innerText='Hide';
+    }else{
+        btn.innerText='Colors';
+    }
+};
+
+/* THEME */
+
+var themeColors={
+    blue:'#0a3d91',
+    green:'#0d5c2e',
+    red:'#8b1a1a',
+    black:'#0b0b0b',
+    bronze:'#6b3a2a',
+    silver:'#71797E',
+    gold:'#8B7500'
+};
+
+var themeSelect=document.getElementById('themeSelect');
+
+themeSelect.onchange=function(){
+    document.body.style.setProperty('--theme-bg',themeColors[themeSelect.value]);
+};
+
+})();
+
+
+</script>
+
+</body>
+</html>
